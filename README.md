@@ -1,15 +1,15 @@
-# 🌊 MyTask: ADHD-Focused Task Manager
+# 🌊 MyTask: Focused Task Manager
 
 ![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel)
 ![Livewire](https://img.shields.io/badge/Livewire-3.x-4e56a6?style=for-the-badge)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-**MyTask** is a high-performance, modular task management web application meticulously designed for users with ADHD. It prioritizes low cognitive load, immediate task capture, and "Energy-Based" productivity to help you swim with the current, not against it.
+**MyTask** is a high-performance, modular task management web application meticulously designed for users. It prioritizes low cognitive load, immediate task capture, and "Energy-Based" productivity to help you swim with the current, not against it.
 
 ---
 
-## 🧠 ADHD-Centric Features
+## 🧠 Centric Features
 
 -   **⚡ The Brain Dump:** A zero-friction "Quick Add" modal. Capture your thoughts before they drift away, without losing your current flow.
 -   **🔋 Energy Level Mapping:** Categorize tasks by "Brain Power" (1-5). Pick tasks that match your current mental battery, whether you're hyper-focused or winding down.
