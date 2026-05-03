@@ -1,0 +1,11 @@
+{
+    "name": "Focus",
+    "alias": "focus",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Focus\\Providers\\FocusServiceProvider"
+    ],
+    "files": []
+}

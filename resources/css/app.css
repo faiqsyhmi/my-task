@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+@theme {
+    /* ─── Color Palette ─── */
+    --color-background: #030712;
+    --color-surface: #0a0f1d;
+    --color-surface-hover: #161e2d;
+    --color-accent: #3b82f6;
+
+    --color-text-primary: #f1f5f9;
+    --color-text-secondary: #94a3b8;
+    --color-text-muted: #64748b;
+
+    --color-border-main: #1e293b;
+}
+
+@layer base {
+
+    html,
+    body {
+        background-color: #030712 !important;
+        color: #f1f5f9 !important;
+        @apply antialiased font-sans;
+    }
+}
+
+.app-shell {
+    min-height: 100vh;
+    background-color: #030712;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 120px;
+}
+
+.app-header {
+    padding: 40px 24px 20px;
+}
+
+.app-header__greeting {
+    @apply text-slate-400 text-xs font-bold uppercase tracking-widest mb-1 opacity-80;
+}
+
+.app-header__title {
+    @apply text-3xl font-black text-white tracking-tight;
+}
+
+.calendar-strip__month {
+    @apply text-sm font-black uppercase tracking-[0.2em] text-slate-400 text-center block w-full py-4;
+}
+
+.calendar-strip__nav {
+    @apply flex items-center justify-between mb-2 px-2;
+}
+
+.calendar-strip__days {
+    @apply flex gap-1 overflow-x-auto py-4;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.calendar-strip__days::-webkit-scrollbar {
+    display: none;
+}
+
+.calendar-day {
+    @apply flex flex-col items-center justify-center min-w-[50px] py-4 rounded-2xl transition-all duration-300;
+    @apply text-slate-500 hover:text-slate-200;
+}
+
+.calendar-day__label {
+    @apply text-[10px] font-bold uppercase mb-1;
+}
+
+.calendar-day__num {
+    @apply text-base font-bold;
+}
+
+.calendar-day--active {
+    @apply bg-blue-600 text-white;
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4) !important;
+}
+
+.calendar-day--active .calendar-day__label {
+    @apply text-blue-100 opacity-80;
+}
+
+.btn-nav {
+    @apply w-8 h-8 flex items-center justify-center rounded-full bg-slate-900/50 border border-slate-800 text-slate-500 hover:text-white transition-all;
+}
+
+.filter-tabs {
+    @apply flex gap-3 mt-8 overflow-x-auto pb-4 px-2;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.filter-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-tab {
+    @apply whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold border transition-all;
+    @apply bg-slate-900/80 border-slate-800 text-slate-500 hover:border-slate-700;
+}
+
+.filter-tab--active {
+    @apply bg-blue-600/20 border-blue-500/50 text-blue-300;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+}
+
+.filter-tab--energy-1.filter-tab--active {
+    @apply bg-emerald-500/10 border-emerald-500/50 text-emerald-400;
+}
+
+.filter-tab--energy-3.filter-tab--active {
+    @apply bg-amber-500/10 border-amber-500/50 text-amber-400;
+}
+
+.filter-tab--energy-5.filter-tab--active {
+    @apply bg-rose-500/10 border-rose-500/50 text-rose-400;
+}
+
+.task-list {
+    @apply px-4 mt-8 space-y-4;
+}
+
+.task-card {
+    @apply bg-[#0a0f1d] border border-slate-800/50 rounded-2xl p-4 transition-all duration-300;
+}
+
+.fab {
+    @apply fixed bottom-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-white z-50 transition-all hover:scale-110 active:scale-95;
+    background-color: #2563eb !important;
+    box-shadow: 0 0 40px rgba(37, 99, 235, 0.7);
+}
+
+.btn-avatar {
+    @apply w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-100 font-bold text-sm;
+}
+
+.empty-state {
+    @apply py-20 flex flex-col items-center justify-center text-center px-8;
+}
+
+/* ─── Modals */
+.modal-backdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    background-color: rgba(3, 7, 18, 0.9) !important;
+    backdrop-filter: blur(8px) !important;
+    z-index: 999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+}
+
+.modal-sheet {
+    background-color: #0a0f1d !important;
+    border: 1px solid #1e293b !important;
+    width: 100% !important;
+    max-width: 500px !important;
+    border-radius: 24px !important;
+    padding: 32px !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+    position: relative !important;
+}
+
+.modal-title {
+    @apply text-2xl font-black text-white mb-8 tracking-tight;
+}
+
+/* ─── Forms ─────────────────────────────────────────────────── */
+.form-field {
+    @apply mb-6;
+}
+
+.form-label {
+    @apply block text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 ml-1;
+}
+
+.form-input {
+    @apply w-full bg-slate-900/50 border border-slate-800 rounded-2xl px-5 py-4 text-slate-100 placeholder-slate-600 transition-all focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none;
+}
+
+.form-input--textarea {
+    @apply min-h-[100px] resize-none;
+}
+
+.energy-slider-wrap {
+    @apply flex items-center gap-4 bg-slate-900/50 border border-slate-800 rounded-2xl px-5 py-4;
+}
+
+.energy-slider {
+    @apply flex-grow h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-600;
+}
+
+.energy-label {
+    @apply text-xl font-black text-blue-400 min-w-[24px] text-center;
+}
+
+.btn-primary {
+    @apply w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-5 rounded-2xl transition-all active:scale-[0.98];
+    @apply mt-4 flex items-center justify-center gap-2;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}

@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/focus",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Focus\\": "app/",
+            "Modules\\Focus\\Database\\Factories\\": "database/factories/",
+            "Modules\\Focus\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Focus\\Tests\\": "tests/"
+        }
+    }
+}
