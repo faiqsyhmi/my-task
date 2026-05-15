@@ -12,6 +12,9 @@ class TaskList extends Component
     public string $statusFilter = 'all';
     public ?int   $energyFilter = null;
     public ?string $dateFilter  = null; // YYYY-MM-DD
+    public array  $expandedTaskIds = [];
+    public array  $selectedTaskIds = [];
+    public bool   $selectAll       = false;
 
     // Week navigation offset (0 = current week)
     public int $weekOffset = 0;
@@ -95,6 +98,57 @@ class TaskList extends Component
         Task::where('user_id', auth()->id())->findOrFail($id)->delete();
     }
 
+    public function toggleExpand(string $id): void
+    {
+        if (in_array($id, $this->expandedTaskIds)) {
+            $this->expandedTaskIds = array_diff($this->expandedTaskIds, [$id]);
+        } else {
+            $this->expandedTaskIds[] = $id;
+        }
+    }
+
+    public function updatedSelectAll($value): void
+    {
+        if ($value) {
+            $this->selectedTaskIds = $this->getTasks()->pluck('id')->map(fn($id) => (string)$id)->toArray();
+        } else {
+            $this->selectedTaskIds = [];
+        }
+    }
+
+    public function updatedSelectedTaskIds(): void
+    {
+        $allIds = $this->getTasks()->pluck('id')->map(fn($id) => (string)$id)->toArray();
+        $this->selectAll = count($this->selectedTaskIds) === count($allIds) && count($allIds) > 0;
+    }
+
+    public function bulkDelete(): void
+    {
+        Task::where('user_id', auth()->id())->whereIn('id', $this->selectedTaskIds)->delete();
+        $this->selectedTaskIds = [];
+        $this->selectAll       = false;
+    }
+
+    public function bulkComplete(): void
+    {
+        Task::where('user_id', auth()->id())->whereIn('id', $this->selectedTaskIds)->update([
+            'status' => 'done',
+            'completed_at' => now(),
+        ]);
+        $this->selectedTaskIds = [];
+        $this->selectAll       = false;
+    }
+
+    public function bulkIncomplete(): void
+    {
+        Task::where('user_id', auth()->id())->whereIn('id', $this->selectedTaskIds)->update([
+            'status' => 'todo',
+            'completed_at' => null,
+        ]);
+        $this->selectedTaskIds = [];
+        $this->selectAll       = false;
+    }
+
     #[On('task-added')]
     public function refresh(): void {} // triggers re-render
 
@@ -108,15 +162,18 @@ class TaskList extends Component
                  ->orderBy('energy_level', 'desc')
                  ->orderBy('due_at');
 
-        if ($this->statusFilter !== 'all') {
+        if ($this->statusFilter === 'starred') {
+            $q->where('is_flagged', true);
+        } elseif ($this->statusFilter !== 'all') {
             $q->where('status', $this->statusFilter);
         }
+
 
         if ($this->energyFilter !== null) {
             $q->where('energy_level', $this->energyFilter);
         }
 
-        if ($this->dateFilter) {
+        if ($this->dateFilter && $this->statusFilter !== 'starred') {
             $q->whereDate('due_at', $this->dateFilter);
         }
 
