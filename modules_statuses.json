@@ -1,5 +1,6 @@
 {
     "Focus": true,
     "Tasks": true,
-    "Analytics": true
+    "Analytics": true,
+    "Routines": true
 }

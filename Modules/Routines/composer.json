@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/routines",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Routines\\": "app/",
+            "Modules\\Routines\\Database\\Factories\\": "database/factories/",
+            "Modules\\Routines\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Routines\\Tests\\": "tests/"
+        }
+    }
+}
