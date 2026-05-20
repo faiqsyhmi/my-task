@@ -67,6 +67,11 @@
                     class="filter-tab filter-tab--energy-{{ $lvl }} {{ $energyFilter === $lvl ? 'filter-tab--active' : '' }}"
                 >{{ $lbl }}</button>
             @endforeach
+
+            <a href="{{ route('analytics.index') }}" wire:navigate class="filter-tab ms-auto flex items-center gap-2 border-blue-500/30 text-blue-400 hover:border-blue-500/60 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                Pulse
+            </a>
         </div>
 
         {{-- ── Select All Toggle ── --}}

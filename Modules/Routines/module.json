@@ -1,0 +1,11 @@
+{
+    "name": "Routines",
+    "alias": "routines",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Routines\\Providers\\RoutinesServiceProvider"
+    ],
+    "files": []
+}

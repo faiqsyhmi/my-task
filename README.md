@@ -57,8 +57,15 @@
     php artisan key:generate
     ```
 
-4.  **Database & Migration:**
-    Configure your database in `.env` and run:
+4.  **Local Database (Supabase):**
+    This project uses Supabase for local development. Make sure Docker is running, then run:
+    ```bash
+    npx supabase start
+    ```
+    To see the local dashboard (Studio), visit `http://localhost:54323`.
+
+5.  **Database & Migration:**
+    Configure your database in `.env` (the local Supabase Postgres port is typically `54322`) and run:
     ```bash
     php artisan migrate
     ```
