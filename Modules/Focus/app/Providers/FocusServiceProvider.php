@@ -5,6 +5,9 @@ namespace Modules\Focus\Providers;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 
+use Livewire\Livewire;
+use Modules\Focus\Livewire\FocusMode;
+
 class FocusServiceProvider extends ModuleServiceProvider
 {
     /**
@@ -18,16 +21,17 @@ class FocusServiceProvider extends ModuleServiceProvider
     protected string $nameLower = 'focus';
 
     /**
-     * Command classes to register.
-     *
-     * @var string[]
+     * Register the service provider.
      */
-    // protected array $commands = [];
+    public function boot(): void
+    {
+        parent::boot();
+        
+        Livewire::component('focus::focus-mode', FocusMode::class);
+    }
 
     /**
      * Provider classes to register.
-     *
-     * @var string[]
      */
     protected array $providers = [
         EventServiceProvider::class,

@@ -33,6 +33,15 @@ new class extends Component
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('analytics.index')" :active="request()->routeIs('analytics.*')" wire:navigate>
+                        {{ __('Analytics') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('routines.index')" :active="request()->routeIs('routines.*')" wire:navigate>
+                        {{ __('Routines') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('focus.mode')" :active="request()->routeIs('focus.*')" wire:navigate>
+                        {{ __('Focus') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -83,6 +92,15 @@ new class extends Component
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('analytics.index')" :active="request()->routeIs('analytics.*')" wire:navigate>
+                {{ __('Analytics') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('routines.index')" :active="request()->routeIs('routines.*')" wire:navigate>
+                {{ __('Routines') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('focus.mode')" :active="request()->routeIs('focus.*')" wire:navigate>
+                {{ __('Focus') }}
             </x-responsive-nav-link>
         </div>
 

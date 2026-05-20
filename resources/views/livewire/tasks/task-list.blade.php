@@ -101,17 +101,30 @@
         @endif
     </main>
 
-    {{-- ══════════ FLOATING ACTION BUTTON ══════════ --}}
-    <button 
-        x-data="" 
-        x-on:click="$dispatch('open-modal')"
-        class="fab"
-        title="Add Task"
-    >
-        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.0" d="M12 4v16m8-8H4"/>
-        </svg>
-    </button>
+    {{-- ══════════ FLOATING ACTION BUTTONS ══════════ --}}
+    <div class="fixed bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-6 z-40">
+        {{-- Add Task FAB --}}
+        <button 
+            x-data="" 
+            x-on:click="$dispatch('open-modal')"
+            class="w-20 h-20 rounded-full bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center shadow-[0_0_40px_rgba(37,99,235,0.6)] transition-all hover:scale-110 active:scale-95 group"
+            title="Add Task"
+        >
+            <svg class="w-12 h-12 transition-transform group-hover:rotate-90 duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.0" d="M12 4v16m8-8H4"/>
+            </svg>
+        </button>
+
+        {{-- Focus Mode FAB --}}
+        <a 
+            href="{{ route('focus.mode') }}" 
+            wire:navigate
+            class="w-14 h-14 rounded-2xl bg-white hover:bg-slate-200 text-slate-900 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all hover:scale-110 active:scale-95 group"
+            title="Start Focus Mode"
+        >
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </a>
+    </div>
 
     {{-- ══════════ BULK ACTIONS BAR ══════════ --}}
     @if(count($selectedTaskIds) > 0)
