@@ -19,12 +19,23 @@
             .min-h-screen { background-color: #030712 !important; }
         </style>
     </head>
-    <body class="font-sans antialiased text-slate-100 bg-[#030712]">
+    <body
+        class="font-sans antialiased text-slate-100 bg-[#030712]"
+        x-data="{
+            sidebarExpanded: localStorage.getItem('app-sidebar-expanded') !== null
+                ? localStorage.getItem('app-sidebar-expanded') === 'true'
+                : window.matchMedia('(min-width: 768px)').matches,
+            toggleSidebar() {
+                this.sidebarExpanded = ! this.sidebarExpanded;
+                localStorage.setItem('app-sidebar-expanded', this.sidebarExpanded);
+            }
+        }"
+    >
         <div class="min-h-screen bg-[#030712]">
-
+            <x-app-sidebar />
 
             <!-- Page Content -->
-            <main>
+            <main class="app-content" :class="{ 'app-content--sidebar-collapsed': ! sidebarExpanded }">
                 {{ $slot }}
             </main>
         </div>
