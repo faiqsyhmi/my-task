@@ -3,7 +3,7 @@
 
     $items = [
         ['label' => 'Dashboard', 'href' => route('dashboard'), 'active' => request()->routeIs('dashboard') || (request()->routeIs('tasks.index') && ! request('view')), 'icon' => 'dashboard'],
-        ['label' => 'Notes', 'href' => $taskViewUrl('notes'), 'active' => request()->routeIs('tasks.index') && request('view') === 'notes', 'icon' => 'notes'],
+        ['label' => 'Notes', 'href' => route('tasks.notes'), 'active' => request()->routeIs('tasks.notes'), 'icon' => 'notes'],
         ['label' => 'Reminders', 'href' => $taskViewUrl('reminders'), 'active' => request()->routeIs('tasks.index') && request('view') === 'reminders', 'icon' => 'reminders'],
         ['label' => 'Pulse', 'href' => route('analytics.index'), 'active' => request()->routeIs('analytics.*'), 'icon' => 'pulse'],
         ['label' => 'Category 1', 'href' => $taskViewUrl('category-1'), 'active' => request()->routeIs('tasks.index') && request('view') === 'category-1', 'icon' => 'tag'],

@@ -4,6 +4,8 @@ namespace Modules\Tasks\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Modules\Tasks\Models\Task;
 
 class TasksController extends Controller
 {
@@ -13,6 +15,21 @@ class TasksController extends Controller
     public function index()
     {
         return view('tasks::index');
+    }
+
+    /**
+     * Display all tasks as notes for the authenticated user.
+     */
+    public function notes(): View
+    {
+        $tasks = Task::query()
+            ->whereBelongsTo(auth()->user())
+            ->orderByRaw('CASE WHEN due_at IS NULL THEN 1 ELSE 0 END')
+            ->orderByDesc('due_at')
+            ->latest()
+            ->get();
+
+        return view('tasks::notes', compact('tasks'));
     }
 
     /**

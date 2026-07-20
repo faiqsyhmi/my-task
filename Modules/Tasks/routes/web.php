@@ -5,6 +5,8 @@ use Modules\Tasks\Http\Controllers\TaskAttachmentController;
 use Modules\Tasks\Http\Controllers\TasksController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('notes', [TasksController::class, 'notes'])->name('tasks.notes');
+
     Route::get('tasks/attachments/{attachment}/download', [TaskAttachmentController::class, 'download'])
         ->whereUuid('attachment')
         ->name('tasks.attachments.download');
