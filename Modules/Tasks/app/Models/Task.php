@@ -3,14 +3,17 @@
 namespace Modules\Tasks\Models;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
 {
     use HasUuids;
+
+    public const STATUSES = ['todo', 'doing', 'done'];
 
     protected $fillable = [
         'user_id',
@@ -24,11 +27,18 @@ class Task extends Model
     ];
 
     protected $casts = [
-        'due_at'       => 'datetime',
+        'due_at' => 'datetime',
         'completed_at' => 'datetime',
-        'is_flagged'   => 'boolean',
+        'is_flagged' => 'boolean',
         'energy_level' => 'integer',
     ];
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Task $task): void {
+            $task->attachments()->get()->each->delete();
+        });
+    }
 
     /**
      * Relationship: A task belongs to a user.
@@ -36,6 +46,11 @@ class Task extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(TaskAttachment::class);
     }
 
     /**

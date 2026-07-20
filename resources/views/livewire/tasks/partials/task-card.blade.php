@@ -19,16 +19,6 @@
                    class="w-4 h-4 rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-blue-500/20 transition-all cursor-pointer">
         </div>
 
-        {{-- Status Toggle Checkbox --}}
-        <button
-            wire:click="toggleStatus('{{ $task->id }}')"
-            class="flex-shrink-0 w-6 h-6 rounded-lg border-2 {{ $isDone ? 'bg-blue-600 border-blue-600' : 'border-slate-700 hover:border-blue-500' }} flex items-center justify-center transition-all"
-        >
-            @if($isDone)
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-            @endif
-        </button>
-
         {{-- Body (Clickable Area) --}}
         <div class="flex-grow cursor-pointer group" wire:click="toggleExpand('{{ $task->id }}')">
             <p class="text-sm font-medium {{ $isDone ? 'text-slate-500 line-through' : 'text-slate-100 group-hover:text-blue-400' }} transition-colors">
@@ -65,6 +55,32 @@
         {{-- Actions --}}
         <div class="flex items-center gap-1">
             <button
+                wire:click="startEditingDetails('{{ $task->id }}')"
+                class="p-2 text-slate-700 hover:text-blue-400 transition-colors"
+                title="{{ $task->description ? 'Edit details' : 'Add details' }}"
+                aria-label="{{ $task->description ? 'Edit details' : 'Add details' }} for {{ $task->title }}"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+            </button>
+
+            <div class="flex flex-shrink-0 items-center rounded-lg border border-slate-800 bg-slate-900/70 p-0.5" role="group" aria-label="Set status for {{ $task->title }}">
+                @foreach(['todo' => 'To Do', 'doing' => 'Doing', 'done' => 'Done'] as $status => $label)
+                    <button
+                        type="button"
+                        wire:click="setTaskStatus('{{ $task->id }}', '{{ $status }}')"
+                        wire:loading.attr="disabled"
+                        wire:target="setTaskStatus('{{ $task->id }}', '{{ $status }}')"
+                        aria-pressed="{{ $task->status === $status ? 'true' : 'false' }}"
+                        class="rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors disabled:opacity-50 {{ $task->status === $status ? 'bg-blue-600 text-white' : 'text-slate-500 hover:bg-slate-800 hover:text-slate-200' }}"
+                    >
+                        {{ $label }}
+                    </button>
+                @endforeach
+            </div>
+
+            <button
                 wire:click="toggleFlag('{{ $task->id }}')"
                 class="p-2 transition-colors {{ $task->is_flagged ? 'text-blue-500' : 'text-slate-700 hover:text-slate-500' }}"
                 title="Flag Task"
@@ -88,10 +104,110 @@
     {{-- Expanded Details --}}
     @if(in_array($task->id, $expandedTaskIds))
         <div class="px-14 pb-5 pt-2 border-t border-slate-800/30 animate-in fade-in slide-in-from-top-1 duration-200">
-            <div class="text-slate-400 text-sm leading-relaxed whitespace-pre-wrap">
-                {{ $task->description ?: 'No detail added.' }}
+            @if($editingTaskId === $task->id)
+                <form wire:submit="saveDetails" class="space-y-3">
+                    <label for="task-details-{{ $task->id }}" class="sr-only">Task details</label>
+                    <textarea
+                        id="task-details-{{ $task->id }}"
+                        wire:model="editingDescription"
+                        class="form-input form-input--textarea"
+                        placeholder="Add task details..."
+                        maxlength="1000"
+                        autofocus
+                    ></textarea>
+                    @error('editingDescription')
+                        <p class="text-xs text-rose-500">{{ $message }}</p>
+                    @enderror
+
+                    <div class="flex justify-end gap-2">
+                        <button type="button" wire:click="cancelEditingDetails" class="px-4 py-2 text-xs font-bold text-slate-400 hover:text-slate-200 transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 rounded-lg bg-blue-600 text-xs font-bold text-white hover:bg-blue-500 transition-colors" wire:loading.attr="disabled">
+                            Save details
+                        </button>
+                    </div>
+                </form>
+            @else
+                <div class="flex items-start justify-between gap-4">
+                    <div class="text-slate-400 text-sm leading-relaxed whitespace-pre-wrap">
+                        {{ $task->description ?: 'No details added.' }}
+                    </div>
+                    <button wire:click="startEditingDetails('{{ $task->id }}')" class="flex-shrink-0 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors">
+                        {{ $task->description ? 'Edit' : 'Add details' }}
+                    </button>
+                </div>
+            @endif
+
+            <div class="mt-5 pt-4 border-t border-slate-800/50">
+                <div class="flex items-center justify-between gap-3 mb-3">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        Attachments ({{ $task->attachments->count() }}/{{ \Modules\Tasks\Models\TaskAttachment::MAX_FILES_PER_TASK }})
+                    </p>
+
+                    @if($attachmentTaskId !== $task->id && $task->attachments->count() < \Modules\Tasks\Models\TaskAttachment::MAX_FILES_PER_TASK)
+                        <button wire:click="startAddingAttachments('{{ $task->id }}')" class="text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors">
+                            Add files
+                        </button>
+                    @endif
+                </div>
+
+                @if($task->attachments->isNotEmpty())
+                    <ul class="space-y-2 mb-3">
+                        @foreach($task->attachments as $attachment)
+                            <li wire:key="attachment-{{ $attachment->id }}" class="flex items-center justify-between gap-3 rounded-xl bg-slate-900/60 px-3 py-2">
+                                <a
+                                    href="{{ route('tasks.attachments.download', $attachment) }}"
+                                    class="min-w-0 text-xs text-slate-300 hover:text-blue-300 truncate"
+                                    title="Download {{ $attachment->original_name }}"
+                                >
+                                    {{ $attachment->original_name }}
+                                    <span class="text-slate-600">({{ number_format($attachment->size / 1024, 1) }} KB)</span>
+                                </a>
+                                <button
+                                    wire:click="deleteAttachment('{{ $attachment->id }}')"
+                                    wire:confirm="Delete this attachment?"
+                                    class="flex-shrink-0 text-xs text-slate-600 hover:text-rose-500 transition-colors"
+                                    aria-label="Delete {{ $attachment->original_name }}"
+                                >
+                                    Delete
+                                </button>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+
+                @if($attachmentTaskId === $task->id)
+                    <form wire:submit="saveAttachments" class="space-y-3">
+                        <input
+                            type="file"
+                            wire:model="pendingAttachments"
+                            accept=".jpg,.jpeg,.png,.webp,.pdf,.xlsx,.txt"
+                            multiple
+                            class="block w-full text-xs text-slate-400 file:mr-3 file:rounded-lg file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:font-bold file:text-white hover:file:bg-blue-500"
+                        >
+                        <p class="text-[11px] text-slate-600">Images, PDF, XLSX, or TXT. Up to 5 files, 10 MB each.</p>
+
+                        @error('pendingAttachments')
+                            <p class="text-xs text-rose-500">{{ $message }}</p>
+                        @enderror
+                        @error('pendingAttachments.*')
+                            <p class="text-xs text-rose-500">{{ $message }}</p>
+                        @enderror
+
+                        <div wire:loading wire:target="pendingAttachments" class="text-xs text-blue-400">Checking files...</div>
+
+                        <div class="flex justify-end gap-2">
+                            <button type="button" wire:click="cancelAddingAttachments" class="px-3 py-2 text-xs font-bold text-slate-400 hover:text-slate-200">
+                                Cancel
+                            </button>
+                            <button type="submit" wire:loading.attr="disabled" class="rounded-lg bg-blue-600 px-3 py-2 text-xs font-bold text-white hover:bg-blue-500">
+                                Save files
+                            </button>
+                        </div>
+                    </form>
+                @endif
             </div>
         </div>
     @endif
 </div>
-
